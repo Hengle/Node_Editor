@@ -19,6 +19,7 @@ namespace NodeEditorFramework
 		public virtual void OnAddNode (Node node) {}
 		public virtual void OnDeleteNode (Node node) {}
 		public virtual void OnMoveNode (Node node) {}
+		public virtual void OnAddNodeKnob (NodeKnob knob) {}
 		// Connection
 		public virtual void OnAddConnection (NodeInput input) {}
 		public virtual void OnRemoveConnection (NodeInput input) {}
@@ -113,7 +114,7 @@ namespace NodeEditorFramework
 
 		#endregion
 
-		#region Node (3)
+		#region Node (4)
 
 		public static Action<Node> OnAddNode;
 		public static void IssueOnAddNode (Node node) 
@@ -139,11 +140,9 @@ namespace NodeEditorFramework
 				if (callbackReceiver [cnt] == null)
 					callbackReceiver.RemoveAt (cnt--);
 				else 
-				{
 					callbackReceiver [cnt].OnDeleteNode (node);
-					node.OnDelete ();
-				}
 			}
+			node.OnDelete ();
 		}
 
 		public static Action<Node> OnMoveNode;
@@ -157,6 +156,20 @@ namespace NodeEditorFramework
 					callbackReceiver.RemoveAt (cnt--);
 				else
 					callbackReceiver [cnt].OnMoveNode (node);
+			}
+		}
+
+		public static Action<NodeKnob> OnAddNodeKnob;
+		public static void IssueOnAddNodeKnob (NodeKnob nodeKnob) 
+		{
+			if (OnAddNodeKnob != null)
+				OnAddNodeKnob.Invoke (nodeKnob);
+			for (int cnt = 0; cnt < receiverCount; cnt++) 
+			{
+				if (callbackReceiver [cnt] == null)
+					callbackReceiver.RemoveAt (cnt--);
+				else
+					callbackReceiver [cnt].OnAddNodeKnob (nodeKnob);
 			}
 		}
 
@@ -193,5 +206,6 @@ namespace NodeEditorFramework
 		}
 
 		#endregion
+
 	}
 }
